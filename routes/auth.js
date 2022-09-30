@@ -8,10 +8,8 @@ router.post('/register', async (req,res) => {
     try {
         const {username, email, password } = req.body;
 
-        if (!username) {
-            return res.status(400).json({success: false});
-        }
-
+        if (!username) return res.status(400).json({success: false});
+        
         const hashedPass = await bcrypt.hash(password,10);
 
         const newUser = new User({
@@ -28,21 +26,18 @@ router.post('/register', async (req,res) => {
 //LOGIN
 router.post('/login', async (req,res) => {
     try {
-    
-        const user = await User.findOne({ username: req.body.username });
-        if (!user) {
-            return res.status(400).json('Wrong credentials!');
-        }                
-        
-        const validated = await bcrypt.compare(req.body.password, user.password);
-        if (!validated) {
-            return res.status(400).json('Wrong credentials!');
-        }                
-        const { password , ...others } = user._doc;
+        const {username, password} = req.body;
+        const user = await User.findOne({ username });
+
+        if (!user) return res.status(400).json('Wrong credentials!');
+                    
+        const validated = await bcrypt.compare(password, user.password);
+        if (!validated) return res.status(400).json('Wrong credentials!');
+                    
+        const { password: pass , ...others } = user._doc;
         res.status(200).json(others);
 
     } catch (error) {
-        console.log(error)
         res.status(500).json(error);
     }
 });

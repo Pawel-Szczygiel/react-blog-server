@@ -2,11 +2,13 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const mongoose = require('mongoose');
-const routerAuth = require('./routes/auth')
+const authRoute = require('./routes/auth');
+const userRoute = require('./routes/users');
 
 
 app.use(express.json());
-app.use('/api',routerAuth);
+app.use('/api/auth',authRoute);
+app.use('/api/users',userRoute);
 
 
 mongoose.connect(process.env.mongoDb_connectionString, {
@@ -17,7 +19,9 @@ mongoose.connect(process.env.mongoDb_connectionString, {
     .catch(err => console.log(err));
     
     
-    
+app.get('/', (req,res) => {
+    res.send('main page')
+})    
     
     
 
