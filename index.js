@@ -36,12 +36,11 @@ app.use('/api/users',userRoute);
 app.use('/api/posts',postRoute);
 app.use('/api/categories', categoriesRoute);
 
-    
+  
 
-    
 
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
-    console.log(`app running on port ${port}`)
+    console.log(`app running on port ${port}...`)
 })

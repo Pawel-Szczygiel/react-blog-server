@@ -10,14 +10,18 @@ router.post('/register', async (req,res) => {
 
         if (!username) return res.status(400).json({success: false});
         
+        const user = await User.findOne({ email });
+
+        if (user) return res.json('The user already exists!');
+
         const hashedPass = await bcrypt.hash(password,10);
 
         const newUser = new User({
             username, email, password: hashedPass
         });
         await newUser.save();
-        
-        res.status(201).json( newUser);
+        console.log(newUser)
+        res.status(201).json( newUser );
     } catch (error) {
         res.status(500).json(error);
     }
@@ -35,6 +39,7 @@ router.post('/login', async (req,res) => {
         if (!validated) return res.status(400).json('Wrong credentials!');
                     
         const { password: pass , ...others } = user._doc;
+        console.log(user._doc)
         res.status(200).json(others);
 
     } catch (error) {
